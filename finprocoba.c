@@ -36,8 +36,25 @@ n*createNode(int id,char nama[],int berat,int no, char alamat[]){
     return newNode;
 }
 
-n*insert(n*root, int id, char nama[],int berat,int no, char alamat[]){
-    
+n*insert(n*root, int id, char nama[],int berat,int no, char alamat[], int level){
+    if(level<35){
+    if(!root){
+      printf("\n\t--- Add New Data Sucess ---\n");
+      return createNode(id,nama,berat,no,alamat);
+    }
+    while(level<35){
+			if(id < root->ID){
+				root->left = insert(root->left,id,nama,berat,no,alamat,level+1);
+		}
+			else{
+				root->right = insert(root->right,id,nama,berat,no,alamat,level+1);
+		}
+		 break;
+	  }
+  }else{
+		printf("\n    --- Cannot input data, maximum Tree level is 35 ---\n\n");
+  }
+  return root;
 }
 
 int main(){
@@ -115,6 +132,7 @@ int main(){
                 }
             }
         }
+        //kek harus ditambahin break tapi masih pusing dimana hahahha lupa
         printf("\nPlease Enter To Continue...");
         getch();
         system("CLEAR || CLS");
@@ -135,3 +153,4 @@ int main(){
   }
   printf("\nThank You For Using The Application ^_^\n");
 }
+
