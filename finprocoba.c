@@ -57,99 +57,200 @@ n*insert(n*root, int id, char nama[],int berat,int no, char alamat[], int level)
   return root;
 }
 
+
+void showlist(n*root){
+	int no=1;
+	n*temp = root;
+	if(!root){
+		//tabel yg sblm no laundry list sama setelah tulisan no laundry list masih error
+		printf("                                  --- Laundry List ---\n");
+    	printf("\n+-----+--------------+-------------------+-----------+---------------------+-----------+\n" );
+    	printf("| No. |  Customer ID |   Customer Name   |   Heavy   |   Handphone Number  |   Adress  |\n");
+    	printf("+-----+--------------+-------------------+-----------+---------------------+-----------+\n" );
+    	printf("|                                                               					   |\n");
+    	printf("|                            --- No Laundry List Available ---                         |\n");
+    	printf("|                                                               					   |\n");
+    	printf("+-----+--------------+-------------------+-----------+---------------------+-----------+\n" );
+	}else{
+		//masih error gabisa nampil
+		do{
+			printf("| %2d. | L%4d | %-21s | %6d KG | %8D | %-30s |\n",no,temp->ID,temp->name,temp->heavy,temp->number,temp->adress);
+			no++;
+			showlist(temp->left);
+			showlist(temp->right);
+		}while(temp!=root && temp!=NULL);
+
+	}
+}
+
 int main(){
+	
     int option = 0;
-    char nama[255],alamat[255];
-    int berat,id,no,choice;
-    n*hasil;
-    n*root=NULL;
+    char nama[255], no[255], alamat[255]; //no nya kuubah jd char (bru yg di main yg kuganti :3)
+    int berat, id, choice;
+    n *hasil;
+    n *root = NULL;
     char x;
         
-    while (option < 5 ) {
-    printf("Oo=======================oO\n");
-    printf("\tSelf Laundry\n");
-    printf("Oo=======================oO\n");
-    printf("[1] View Laundry List\n");
-    printf("[2] Add New Laundry List\n");
-    printf("[3] Search Laundry List\n");
-    printf("[4] Take Laundry\n");
-    printf("[5] Sort Laundry List\n");
-    printf("[6] Exit Program\n");
-    printf("Input Your Choice >> "); scanf("%d", &option);
-    if(option==1){
-        printf("\nPlease Enter To Continue...");
-        getch();
-        system("CLEAR || CLS");
-    }else if(option==2){
-        while(1){
-            getchar();
-            printf("\n\t>> Input Order ID L[1-9][0-9]: ");
-            scanf("%c%d",&x,&id);
-            if(x!='L' || (id<10 || id>99)){
-                printf("\n\t--- ID doesn't exist ---\n");
-            }else if (search(root,id)!=NULL){
-                printf("\n\t--- Add New Data Failure--\n");
-		        printf("\tId is already Exist\n");
-		        break;
-            }else{
-                while(1){
-                    printf("\t>> Input customer name [3-25]: ");
-			        scanf(" %[^\n]",nama);
-                    if(strlen(nama)<3 ||strlen(nama)>25){
-			            printf("\n\t--- Must Between 3 and 25 characters ---");
-			        }else{
-                    while(1){
-                        printf("\t>> Input Weight [1-15]Kg: ");
-                        scanf("%d",&berat);
-                        if(berat<1 || berat>15){
-                            printf("\n\t--- Must Between 1 and 15 Kg ---");
-                        }else{
-                            while(1){
-                                printf("\t>> Input Number Telephone [11-13]: ");
-                                scanf("%d",&no);
-                                if(no<11 && no>13){
-                                    printf("\n\t--- No Telephone Must Between 11 and 13 ---");
-                                }else{
-                                while(1){
-                                printf("\n\tChoose Take Delivery Way :\n");
-                                printf("\t[1] Self Pick Up\n");
-                                printf("\t[2] Delivery\n");
-                                printf("\t>> ");
-                                scanf("%d",&choice);
-                                if(choice==1){
-                                   //error gamau balik ke program awal ehe :v
-                                   break;
-                                }else{
-                                   printf("\t>> Input Adress [7-100]: ");
-                                   scanf(" %[^\n]",alamat);
-                                }
-                               }
-                              }
-                            }
-                        }
+    while (1) 
+	{
+	    printf("\n Oo=======================oO\n");
+	    printf("         Self Laundry\n");
+	    printf(" Oo=======================oO\n");
+	    printf("   [1] View Laundry List\n");
+	    printf("   [2] Add New Laundry List\n");
+	    printf("   [3] Search Laundry List\n");
+	    printf("   [4] Take Laundry\n");
+	    printf("   [5] Sort Laundry List\n");
+	    printf("   [6] Exit Program\n");
+	    printf("\n >> Input Your Choice: "); scanf("%d", &option);
+	    
+	    
+	    if(option==1)
+		{
+			showlist(root);
+	    }
+		else if(option==2)
+		{
+			//validasi id
+			int flag = 1, l;
+	        while(1)
+	        {
+	        	getchar();
+	        	printf("\n    >> Input Order ID L[1-9][0-9]: ");
+	            scanf("%c%d", &x, &id);
+	            
+				if(x!='L' || (id<10 || id>99))
+				{
+	                printf("      --- ID doesn't exist ---\n");
+	            }
+				else if (search(root,id) != NULL)
+				{
+					flag = 0;
+	                printf("      --- Add New Data Failure. ID is already Exsist ---\n");
+	            }
+				else
+					break;
+			}
+			
+			//klo ID blm pernah diinput
+			if(flag) 
+			{
+				//validasi nama
+				while(1)
+				{
+					getchar();
+			        printf("\n    >> Input customer name [3-25]: ");
+					scanf("%[^\n]", nama);
+					l = strlen(nama);
+	                if( l < 3 || l > 25 )
+					{
+			            printf("      --- Must Between 3 and 25 characters ---\n");
+			        }
+					else
+						break;
+				}
+				
+				//validasi berat
+				while(1)
+				{
+					printf("\n    >> Input Weight [1-15]Kg: ");
+                    scanf("%d", &berat);
+                    if( berat<1 || berat>15 )
+					{
+                        printf("      --- Must Between 1 and 15 Kg ---\n");
                     }
-                  }
-                }
-            }
-        }
-        //kek harus ditambahin break tapi masih pusing dimana hahahha lupa
-        printf("\nPlease Enter To Continue...");
+                    else 
+                    	break;
+				}
+				
+				//validasi nomor telepon
+				while(1)
+				{
+					getchar();
+                    printf("\n    >> Input Number Telephone [10-13]: ");
+                    scanf("%[^\n]", no);
+                    l = strlen(no);
+                    if( l < 10 || l > 13 )
+					{
+                        printf("      --- No Telephone Must Between 11 and 13 Num Characters ---\n");
+                    }
+					else
+					{
+						int i, no_check = 1;
+						for(i=0; i<l; i++)
+						{
+							if( no[i] < 48 || no[i] > 57 ) //ascii angka '0' = 48, '9' = 57
+							{
+								no_check = 0;
+								break;
+							}
+						}
+//						printf("\nno cek: %d\n", no_check);
+						if(no_check == 1) //kl stringnya semua terdiri dari angka
+							break;
+						else
+							printf("      --- No Telephone Must include Numbers Only ---\n");
+					}
+				}
+				
+				//validasi metode pick up
+				printf("\n    Take Delivery Way :\n");
+                printf("      [1] Self Pick Up\n");
+                printf("      [2] Delivery\n");
+                
+				while(1)
+				{
+				    printf("\n    >> Input your choice: ");
+                    scanf("%d", &choice);
+                    
+                    if(choice == 1)
+					{
+                       printf("\n    --- Laundry will be self picked up ---\n");
+                       break;
+                    }
+					else if(choice == 2)
+					{
+						//validasi alamat
+						while(1)
+						{
+							getchar();
+							printf("\n    >> Input Adress [7-100]: ");
+	                        scanf("%[^\n]", alamat);
+	                        l = strlen(alamat);
+	                        if( l < 7 || l > 100 )
+							{
+					            printf("      --- Must Between 7 and 100 characters ---\n");
+					        }
+							else
+								break;
+						}
+						printf("\n    --- Laundry will be delivered to %s ---\n", alamat);
+						break;
+                    }
+                    else
+                    	printf("    --- Input not valid ---\n");
+				}
+			}
+			
+	    }
+		else if (option==3)
+		{
+	    	
+	    }
+	    
+		else if (option==4)
+		{
+	        
+	      
+	    }
+		else if (option==5){
+	        
+	    }
+	    
+	    printf("\n\nPlease Enter To Continue...");
         getch();
         system("CLEAR || CLS");
-    }else if(option==3){
-        printf("\nPlease Enter To Continue...");
-        getch();
-        system("CLEAR || CLS");
-    }else if(option==4){
-        
-        printf("\n\nPlease Enter To Continue...");
-        getch();
-        system("CLEAR || CLS");
-    }else if(option==5){
-        printf("\n\nPlease Enter To Continue...");
-        getch();
-        system("CLEAR || CLS");
-    }
   }
   printf("\nThank You For Using The Application ^_^\n");
 }
