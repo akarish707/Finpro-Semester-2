@@ -67,8 +67,8 @@ void showlist(n *root, int no)
 	if(root == NULL)
 		return;
 //											17									225000  |
-	printf("    | %2d. |   L%4d   |  %-25s  |    %-13s  | %-25s |   %2d Kg   |  Rp %6d  |\n", no, temp->ID, temp->name, temp->number, temp->adress, temp->heavy, temp->price);
-	printf("    +-----+------------+-------------------------+----------------+-------------------------+-----------+-------------+\n" );	
+	printf("    | %2d. |    L%4d   |  %-21s  |  %-12s  | %-23s |   %2d Kg   |  Rp %6d  |\n", no, temp->ID, temp->name, temp->number, temp->adress, temp->heavy, temp->price);
+	
 //	  printf("    | No. |  Customer ID  |      Customer Name      |  Phone Number  |          Adress         |   Heavy   |    Harga    |\n");
 	showlist(root->left, no+1);
 	showlist(root->right, no+1);
@@ -126,6 +126,24 @@ n* delete(n *root, int id)
     return root;
 }
 
+
+
+void inorder(n*root,int no)
+{
+    if(root == NULL)
+        return;
+
+    //traverse the left subtree
+    inorder(root->left,no++);
+
+    //visit the root
+    printf("    | %2d. |    L%4d   |  %-21s  |  %-12s  | %-23s |   %2d Kg   |  Rp %6d  |\n", no, root->ID, root->name, root->number, root->adress, root->heavy, root->price);
+
+    //traverse the right subtree
+    inorder(root->right,no++);
+}
+
+
 int main(){
 	
     int option = 0;
@@ -151,12 +169,23 @@ int main(){
 	    
 	    if(option==1)
 		{
-			printf("\n                                            --- Laundry List ---\n");
-			printf("\n    +-----+------------+-------------------------+----------------+-------------------------+-----------+-------------+\n" );
-			  printf("    | No. |     ID     |      Customer Name      |  Phone Number  |          Adress         |   Heavy   |    Harga    |\n");
-			  printf("    +-----+------------+-------------------------+----------------+-------------------------+-----------+-------------+\n" );
-			showlist(root, 1);
-			  printf("    +-----+------------+-------------------------+----------------+-------------------------+-----------+-------------+\n" );	
+			if(!root){
+				printf("\n                                                   --- Laundry List ---\n\n");
+				printf("    +-----+------------+-------------------------+----------------+-------------------------+-----------+-------------+\n" );
+			  	printf("    | No. |     ID     |      Customer Name      |  Phone Number  |          Adress         |   Heavy   |    Harga    |\n");
+			  	printf("    +-----+------------+-------------------------+----------------+-------------------------+-----------+-------------+\n" );
+			  	printf("    |                                                                                                                 |\n");
+			  	printf("    |                                           --- No Data Laundry Available ---                                     |\n");
+			  	printf("    |                                                                                                                 |\n");
+			  	printf("    +-----+------------+-------------------------+----------------+-------------------------+-----------+-------------+\n" );
+			}else{
+				printf("\n                                                       --- Laundry List ---\n");
+				printf("    +-----+------------+-------------------------+----------------+-------------------------+-----------+-------------+\n" );
+			  	printf("    | No. |     ID     |      Customer Name      |  Phone Number  |          Adress         |   Heavy   |    Harga    |\n");
+			  	printf("    +-----+------------+-------------------------+----------------+-------------------------+-----------+-------------+\n" );
+				showlist(root, 1);
+			  	printf("    +-----+------------+-------------------------+----------------+-------------------------+-----------+-------------+\n" );
+			}
 		}
 		else if(option==2)
 		{
@@ -263,7 +292,7 @@ int main(){
 						{
 							printf("\n\n    Total price : %d\n", harga);
 	                       	printf("\n    --- Laundry will be self picked up ---\n");
-						   	strcpy(alamat, "     ( Self Pick Up )    ");
+						   	strcpy(alamat, "( Self Pick Up ) ");
 	                    }
 						else if(choice == 2)
 						{
@@ -343,7 +372,7 @@ int main(){
 			}
 	    }
 		else if (option==5){
-	        
+			inorder(root,1);
 	    }
 	    
 	    printf("\n\nPlease Enter To Continue...");
@@ -356,14 +385,12 @@ int main(){
 
 
 /*
-
 2
 L30
 Celine
 2
 0812222210
 1
-
 2
 L20
 cheryl
@@ -371,21 +398,18 @@ cheryl
 08122222911
 2
 Jl. ya disana itu
-
 2
 L15
 Kunti
 2
 08122222913
 1
-
 2
 L10
 askadi
 2
 081225222112
 1
-
 2
 L26
 dime
@@ -393,28 +417,24 @@ dime
 08122222911
 2
 Jl. depan warunk
-
 2
 L60
 mega
 2
 08122222913
 1
-
 2
 L12
 bapak sudirman
 2
 08122222913
 1
-
 2
 L44
 mbok je
 2
 081225298712
 1
-
 2
 L23
 kang nggojek
@@ -422,7 +442,6 @@ kang nggojek
 08122558911
 2
 Jl. depan mekdi
-
 2
 L98
 megah kalik saya
@@ -430,4 +449,3 @@ megah kalik saya
 08129962913
 1
 */
-
