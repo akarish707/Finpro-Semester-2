@@ -57,6 +57,8 @@ n*insert(n*root, int id, char nama[],int berat,char no[], char alamat[], int lev
 }
 
 
+
+
 void showlist(n*root){
 	int no=1;
 	n*temp = root;
@@ -83,6 +85,57 @@ void showlist(n*root){
 	    printf("+-----+--------------+-------------------+-----------+-------------------+-------------------------+\n" );
 }
 
+n* find_minimum(n*root)
+{
+    if(root == NULL)
+        return NULL;
+    else if(root->left != NULL) // node with minimum value will have no left child
+        return find_minimum(root->left); // left most element will be minimum
+    return root;
+}
+
+n* delete(n *root, int id)
+{
+    
+    if(root==NULL)
+        return NULL;
+    if (id>root->ID)
+        root->right = delete(root->right, id);
+    else if(id<root->ID)
+        root->left = delete(root->left, id);
+    else
+    {
+        //No Children
+        if(root->left==NULL && root->right==NULL)
+        {
+            free(root);
+            return NULL;
+        }
+
+        //One Child
+        else if(root->left==NULL || root->right==NULL)
+        {
+            n *temp;
+            if(root->left==NULL)
+                temp = root->right;
+            else
+                temp = root->left;
+            free(root);
+            return temp;
+        }
+
+        //Two Children
+        else
+        {
+            n *temp = find_minimum(root->right);
+            strcpy(root->name,temp->name);
+            root->ID = temp->ID;
+            root->right = delete(root->right, temp->ID);
+        }
+    }
+    return root;
+}
+
 int main(){
 	
     int option = 0;
@@ -99,7 +152,7 @@ int main(){
 	    printf(" Oo=======================oO\n");
 	    printf("   [1] View Laundry List\n");
 	    printf("   [2] Add New Laundry List\n");
-	    printf("   [3] Search Laundry List\n");
+	    printf("   [3] Cancel Laundry\n");
 	    printf("   [4] Take Laundry\n");
 	    printf("   [5] Sort Laundry List\n");
 	    printf("   [6] Exit Program\n");
@@ -241,7 +294,34 @@ int main(){
 	    }
 		else if (option==3)
 		{
-	    	
+			while(1){
+				getchar();
+				printf("\n   >> Input Order ID L[1-9][0-9]: ");
+				scanf("%c%d", &x, &id);
+				n*temp = search(root,id);
+				if(x!='L' || (id<10 || id>99))
+				{
+	                printf("      --- ID doesn't exist ---\n");
+	            }else if(temp!=NULL){
+					int pilih;
+					printf("\n\t<L%2d> %-14s %2d KG   %-13s   %-23s\n",temp->ID,temp->name,temp->heavy, temp->number, temp->adress);
+					printf("\n\tData With ID L%2d Is Found You Want to Cancel It?\n",temp->ID);
+					printf("\t[1] Yes\n");
+					printf("\t[2] No\n");
+					printf("\t>> ");
+					scanf("%d",&pilih);
+					if(pilih==1){
+						printf("\n\tData With ID L%2d Is Deleted\n",temp->ID);
+						root = delete(root,id);
+						break;
+					}else{
+						break;
+					}
+				}else{
+					printf("\n      --- ID Is Not Found ---\n");
+					break;
+				}
+			}
 	    }
 	    
 		else if (option==4)
