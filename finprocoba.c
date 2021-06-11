@@ -60,26 +60,27 @@ n*insert(n*root, int id, char nama[],int berat,char no[], char alamat[], int lev
 void showlist(n*root){
 	int no=1;
 	n*temp = root;
+	printf("                                        --- Laundry List ---\n");
+	printf("\n+-----+--------------+-------------------+-----------+-------------------+-------------------------+\n" );
+	printf("| No. |  Customer ID |   Customer Name   |   Heavy   |  Handphone Number |          Adress         |\n");
+	printf("+-----+--------------+-------------------+-----------+-------------------+-------------------------+\n" );
+	
 	if(!root){
 		//tabel yg sblm no laundry list sama setelah tulisan no laundry list masih error
-		printf("                                  --- Laundry List ---\n");
-    	printf("\n+-----+--------------+-------------------+-----------+---------------------+-----------+\n" );
-    	printf("| No. |  Customer ID |   Customer Name   |   Heavy   |   Handphone Number  |   Adress  |\n");
-    	printf("+-----+--------------+-------------------+-----------+---------------------+-----------+\n" );
-    	printf("|                                                               					   |\n");
-    	printf("|                            --- No Laundry List Available ---                         |\n");
-    	printf("|                                                               					   |\n");
-    	printf("+-----+--------------+-------------------+-----------+---------------------+-----------+\n" );
-	}else{
+		printf("|                                                                                                  |\n");
+    	printf("|                                 --- No Laundry List Available ---                                |\n");
+		printf("|                                                                                                  |\n");
+
+	}else if(root){
 		//masih error gabisa nampil
 		do{
-			printf("| %2d. | L%4d | %-21s | %6d KG | %8D | %-30s |\n",no,temp->ID,temp->name,temp->heavy,temp->number,temp->adress);
+			printf("| %2d. |     L%4d    | %-17s |   %2d KG   |    %-13s  | %-23s |\n",no,temp->ID,temp->name,temp->heavy,temp->number,temp->adress);
 			no++;
 			showlist(temp->left);
 			showlist(temp->right);
 		}while(temp!=root && temp!=NULL);
-
 	}
+	    printf("+-----+--------------+-------------------+-----------+-------------------+-------------------------+\n" );
 }
 
 int main(){
@@ -207,6 +208,7 @@ int main(){
 					{
                        printf("\n    --- Laundry will be self picked up ---\n");
 					   //error
+					   strcpy(alamat, "Self Pick Up");
                        root = insert(root,id,nama,berat,no,alamat,0);
                        break;
                     }
