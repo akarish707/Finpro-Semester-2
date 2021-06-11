@@ -4,11 +4,12 @@
 #include <stdlib.h>
 
 typedef struct Node{
-    char name[255];
+    char name[25];
     int ID;
     int heavy;
-    char number[50];
-    char adress[255];
+    int price;
+    char number[13];
+    char adress[25];
     struct Node *left,*right;
 }n;
 
@@ -24,63 +25,55 @@ n* search(n*root, int id)
     }
 }
 
-n*createNode(int id,char nama[],int berat,char no[], char alamat[]){
+n *createNode(int id, char nama[], int berat, int harga, char no[], char alamat[]){
     n*newNode = (n*)malloc(sizeof(n));
+    
     newNode->ID = id;
-    strcpy(newNode->name,nama);
     newNode->heavy = berat;
-    strcpy(newNode->number,no);
-    strcpy(newNode->adress,alamat);
+    newNode->price = harga;
+    strcpy(newNode->name, nama);
+    strcpy(newNode->number, no);
+    strcpy(newNode->adress, alamat);
+    
     newNode->left = NULL;
     newNode->right = NULL;
     return newNode;
 }
 
-n*insert(n*root, int id, char nama[],int berat,char no[], char alamat[], int level){
-    if(level<35){
-    if(!root){
-      return createNode(id,nama,berat,no,alamat);
-    }
-    while(level<35){
-			if(id < root->ID){
-				root->left = insert(root->left,id,nama,berat,no,alamat,level+1);
+n *insert(n*root, int id, char nama[], int berat, int harga, char no[], char alamat[], int level){
+    if(level<35)
+	{
+	    if(!root)
+	      return createNode(id, nama, berat, harga, no, alamat);
+	    while(level<35)
+		{
+			if(id < root->ID)
+				root->left = insert(root->left, id, nama, berat, harga, no, alamat, level+1);
+			else
+				root->right = insert(root->right, id, nama, berat, harga, no, alamat, level+1);
+			break;
 		}
-			else{
-				root->right = insert(root->right,id,nama,berat,no,alamat,level+1);
-		}
-		 break;
-	  }
-  }else{
+  	}
+	else
 		printf("\n    --- Cannot input data, maximum Tree level is 35 ---\n\n");
-  }
+  	
   return root;
 }
 
-void showlist(n*root){
-	int no=1;
-	n*temp = root;
-	printf("                                        --- Laundry List ---\n");
-	printf("\n+-----+--------------+-------------------+-----------+-------------------+-------------------------+\n" );
-	printf("| No. |  Customer ID |   Customer Name   |   Heavy   |  Handphone Number |          Adress         |\n");
-	printf("+-----+--------------+-------------------+-----------+-------------------+-------------------------+\n" );
+void showlist(n *root, int no)
+{
+	n *temp = root;
 	
-	if(!root){
-		//tabel yg sblm no laundry list sama setelah tulisan no laundry list masih error
-		printf("|                                                                                                  |\n");
-    	printf("|                                 --- No Laundry List Available ---                                |\n");
-		printf("|                                                                                                  |\n");
-
-	}else if(root){
-		//masih error gabisa nampil
-		do{
-			printf("| %2d. |     L%4d    | %-17s |   %2d KG   |    %-13s  | %-23s |\n",no,temp->ID,temp->name,temp->heavy,temp->number,temp->adress);
-			no++;
-			showlist(temp->left);
-			showlist(temp->right);
-		}while(temp!=root && temp!=NULL);
-	}
-	    printf("+-----+--------------+-------------------+-----------+-------------------+-------------------------+\n" );
+	if(root == NULL)
+		return;
+//											17									225000  |
+	printf("    | %2d. |   L%4d   |  %-25s  |    %-13s  | %-25s |   %2d Kg   |  Rp %6d  |\n", no, temp->ID, temp->name, temp->number, temp->adress, temp->heavy, temp->price);
+	printf("    +-----+------------+-------------------------+----------------+-------------------------+-----------+-------------+\n" );	
+//	  printf("    | No. |  Customer ID  |      Customer Name      |  Phone Number  |          Adress         |   Heavy   |    Harga    |\n");
+	showlist(root->left, no+1);
+	showlist(root->right, no+1);
 }
+
 
 n* find_minimum(n*root)
 {
@@ -136,8 +129,8 @@ n* delete(n *root, int id)
 int main(){
 	
     int option = 0;
-    char nama[255], no[255], alamat[255]; //no nya kuubah jd char (bru yg di main yg kuganti :3)
-    int berat, id, choice;
+    char nama[255], no[255], alamat[255];
+    int berat, id, harga, choice;
     n *hasil;
     n *root = NULL;
     char x;
@@ -158,8 +151,13 @@ int main(){
 	    
 	    if(option==1)
 		{
-			showlist(root);
-	    }
+			printf("\n                                            --- Laundry List ---\n");
+			printf("\n    +-----+------------+-------------------------+----------------+-------------------------+-----------+-------------+\n" );
+			  printf("    | No. |     ID     |      Customer Name      |  Phone Number  |          Adress         |   Heavy   |    Harga    |\n");
+			  printf("    +-----+------------+-------------------------+----------------+-------------------------+-----------+-------------+\n" );
+			showlist(root, 1);
+			  printf("    +-----+------------+-------------------------+----------------+-------------------------+-----------+-------------+\n" );	
+		}
 		else if(option==2)
 		{
 			//validasi id
@@ -214,6 +212,9 @@ int main(){
                     	break;
 				}
 				
+				//hitung harga
+				harga = berat*15000;
+				
 				//validasi nomor telepon
 				while(1)
 				{
@@ -254,40 +255,39 @@ int main(){
 				    printf("\n    >> Input your choice: ");
                     scanf("%d", &choice);
                     
-                    if(choice == 1)
-					{
-                       printf("\n    --- Laundry will be self picked up ---\n");
-					   //error
-					   strcpy(alamat, "Self Pick Up");
-                       root = insert(root,id,nama,berat,no,alamat,0);
-                       break;
-                    }
-					else if(choice == 2)
-					{
-						//validasi alamat
-						while(1)
-						{
-							getchar();
-							printf("\n    >> Input Adress [7-100]: ");
-	                        scanf("%[^\n]", alamat);
-	                        l = strlen(alamat);
-	                        if( l < 7 || l > 100 )
-							{
-					            printf("      --- Must Between 7 and 100 characters ---\n");
-					        }
-							else
-								break;
-						}
-						printf("\n    --- Laundry will be delivered to %s ---\n", alamat);
-						//error
-						root = insert(root,id,nama,berat,no,alamat,0);
-						break;
-                    }
-                    else
+                    if(choice < 1 || choice > 2)
                     	printf("    --- Input not valid ---\n");
+                    else
+                    {
+                    	if(choice == 1)
+						{
+							printf("\n\n    Total price : %d\n", harga);
+	                       	printf("\n    --- Laundry will be self picked up ---\n");
+						   	strcpy(alamat, "     ( Self Pick Up )    ");
+	                    }
+						else if(choice == 2)
+						{
+							//validasi alamat
+							while(1)
+							{
+								getchar();
+								printf("\n    >> Input Adress [7-25]: ");
+		                        scanf("%[^\n]", alamat);
+		                        l = strlen(alamat);
+		                        if( l < 7 || l > 25 )
+						            printf("      --- Must Between 7 and 25 characters ---\n");
+								else
+									break;
+							}
+							printf("\n\n    Total price : %d\n", harga);
+							printf("\n    --- Laundry will be delivered to %s ---\n", alamat);
+	                    }
+	                    
+	                    root = insert(root, id, nama, berat, harga, no, alamat, 0);
+							break;
+					}
 				}
 			}
-			
 	    }
 		else if (option==3)
 		{
@@ -297,9 +297,9 @@ int main(){
 				scanf("%c%d", &x, &id);
 				n*temp = search(root,id);
 				if(x!='L' || (id<10 || id>99))
-				{
 	                printf("      --- ID doesn't exist ---\n");
-	            }else if(temp!=NULL){
+	            else if(temp!=NULL)
+				{
 					int pilih;
 					printf("\n\t<L%2d> %-14s %2d KG   %-13s   %-23s\n",temp->ID,temp->name,temp->heavy, temp->number, temp->adress);
 					printf("\n\tData With ID L%2d Is Found You Want to Cancel It?\n",temp->ID);
@@ -307,14 +307,17 @@ int main(){
 					printf("\t[2] No\n");
 					printf("\t>> ");
 					scanf("%d",&pilih);
-					if(pilih==1){
+					if(pilih==1)
+					{
 						printf("\n\tData With ID L%2d Is Deleted\n",temp->ID);
 						root = delete(root,id);
 						break;
-					}else{
-						break;
 					}
-				}else{
+					else
+						break;
+					
+				}
+				else{
 					printf("\n      --- ID Is Not Found ---\n");
 					break;
 				}
@@ -349,4 +352,82 @@ int main(){
   }
   printf("\nThank You For Using The Application ^_^\n");
 }
+
+
+
+/*
+
+2
+L30
+Celine
+2
+0812222210
+1
+
+2
+L20
+cheryl
+2
+08122222911
+2
+Jl. ya disana itu
+
+2
+L15
+Kunti
+2
+08122222913
+1
+
+2
+L10
+askadi
+2
+081225222112
+1
+
+2
+L26
+dime
+2
+08122222911
+2
+Jl. depan warunk
+
+2
+L60
+mega
+2
+08122222913
+1
+
+2
+L12
+bapak sudirman
+2
+08122222913
+1
+
+2
+L44
+mbok je
+2
+081225298712
+1
+
+2
+L23
+kang nggojek
+2
+08122558911
+2
+Jl. depan mekdi
+
+2
+L98
+megah kalik saya
+2
+08129962913
+1
+*/
 
