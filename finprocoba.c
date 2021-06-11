@@ -56,9 +56,6 @@ n*insert(n*root, int id, char nama[],int berat,char no[], char alamat[], int lev
   return root;
 }
 
-
-
-
 void showlist(n*root){
 	int no=1;
 	n*temp = root;
@@ -326,8 +323,21 @@ int main(){
 	    
 		else if (option==4)
 		{
-	        
-	      
+			while(1){
+				getchar();
+				printf("\tInput Order ID L[1-9][0-9]: "); 
+          		scanf("%c%d",&x, &id); 
+          		n*temp = search(root,id);
+				if(x!='L' || (id<10 || id>99)){
+			        printf("\n\t--- ID doesn't exist ---\n\n");
+		     	}else if(temp==NULL){
+		   	      	printf("\n\t--- Member ID is not found ---\n");
+		    	}else if(temp!=NULL){
+              		printf("\tL%2d - %-14s  %2d KG %-13s %-23s \n\tHas Been Sucessfully Taken\n",temp->ID,temp->name,temp->heavy,temp->number,temp->adress);
+				    root=delete(root,id);
+				    break;
+		    	}
+			}
 	    }
 		else if (option==5){
 	        
