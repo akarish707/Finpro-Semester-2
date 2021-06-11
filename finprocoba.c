@@ -7,7 +7,7 @@ typedef struct Node{
     char name[255];
     int ID;
     int heavy;
-    int number;
+    char number[50];
     char adress[255];
     struct Node *left,*right;
 }n;
@@ -24,22 +24,21 @@ n* search(n*root, int id)
     }
 }
 
-n*createNode(int id,char nama[],int berat,int no, char alamat[]){
+n*createNode(int id,char nama[],int berat,char no[], char alamat[]){
     n*newNode = (n*)malloc(sizeof(n));
     newNode->ID = id;
     strcpy(newNode->name,nama);
     newNode->heavy = berat;
-    newNode->number = berat;
+    strcpy(newNode->number,no);
     strcpy(newNode->adress,alamat);
     newNode->left = NULL;
     newNode->right = NULL;
     return newNode;
 }
 
-n*insert(n*root, int id, char nama[],int berat,int no, char alamat[], int level){
+n*insert(n*root, int id, char nama[],int berat,char no[], char alamat[], int level){
     if(level<35){
     if(!root){
-      printf("\n\t--- Add New Data Sucess ---\n");
       return createNode(id,nama,berat,no,alamat);
     }
     while(level<35){
@@ -207,6 +206,8 @@ int main(){
                     if(choice == 1)
 					{
                        printf("\n    --- Laundry will be self picked up ---\n");
+					   //error
+                       root = insert(root,id,nama,berat,no,alamat,0);
                        break;
                     }
 					else if(choice == 2)
@@ -226,6 +227,8 @@ int main(){
 								break;
 						}
 						printf("\n    --- Laundry will be delivered to %s ---\n", alamat);
+						//error
+						root = insert(root,id,nama,berat,no,alamat,0);
 						break;
                     }
                     else
