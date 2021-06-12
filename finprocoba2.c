@@ -395,7 +395,7 @@ int main(){
 				{
 					printf("\n\n    ------------------------------------------------------------");
 					printf("\n\n      Total price : %d\n", harga);
-                   	printf("\n      Laundry will be self picked up ---\n");
+                   	printf("\n      Laundry will be self picked up\n");
 				   	strcpy(alamat, "   ( Self Pick Up )      ");
                 }
 				else if(choice == 2)
