@@ -180,19 +180,26 @@ int id_validation(n *root, int *flag)
 	return id;
 }
 
-int num_validation(int method)
+int num_validation(int method, int space)
 {
 	int temp;
+	char spc[10];
+	
+	if(space == 1)
+		strcpy(spc, "    "); // 4 space
+	else
+		strcpy(spc, "      "); // 6 space
+	
 	
 	void check()
 	{
 		while(1)
 		{
-		    printf("\n       >> Input your choice: ");
+		    printf("\n%s>> Input your choice: ", spc);
             scanf("%d", &temp);
             
             if(temp < 1 || temp > 2)
-            	printf("        --- Input not valid ---\n");
+            	printf("%s  --- Input not valid ---\n", spc);
             else
 				break;
 		}
@@ -204,39 +211,45 @@ int num_validation(int method)
 		{
 			while(1)
 			{
-				printf("\n    >> Input Weight [1-15]Kg: ");
+				printf("\n%s>> Input Weight [1-15]Kg: ", spc);
                 scanf("%d", &temp);
                 if( temp < 1 || temp > 15 )
 				{
-                    printf("      --- Must Between 1 and 15 Kg ---\n");
+                    printf("%s  --- Must Between 1 and 15 Kg ---\n", spc);
                 }
                 else 
                 	break;
 			}
 			break;
 		}
-		case 2: // validasi harga
+		case 2: // validasi delivery way
 		{
-			printf("\n    Take Delivery Way :\n");
-            printf("      [1] Self Pick Up\n");
-            printf("      [2] Delivery\n");
+			printf("\n%sTake Delivery Way :\n", spc);
+            printf("%s  [1] Self Pick Up\n", spc);
+            printf("%s  [2] Delivery\n", spc);
             
 			check();
 			break;
 		}
 		case 3: // validation for y/n, cancel/delete
-		{
 			check();
-		}
+			break;
 	}
 	return temp;
 }
 
-const char* string_validation(int method)
+const char* string_validation(int method, int space)
 {
 	char temp[255];
 	int l;
 	
+	char spc[10];
+	
+	if(space == 1)
+		strcpy(spc, "    ");
+	else
+		strcpy(spc, "      ");
+		
 	switch(method)
 	{
 		case 1: //validasi nama
@@ -244,12 +257,12 @@ const char* string_validation(int method)
 			while(1)
 			{
 				getchar();
-		        printf("\n    >> Input customer name [3-25]: ");
+		        printf("\n%s>> Input customer name [3-25]: ", spc);
 				scanf("%[^\n]", temp);
 				l = strlen(temp);
                 if( l < 3 || l > 25 )
 				{
-		            printf("      --- Must Between 3 and 25 characters ---\n");
+		            printf("%s  --- Must Between 3 and 25 characters ---\n", spc);
 		        }
 				else
 					break;
@@ -261,12 +274,12 @@ const char* string_validation(int method)
 			while(1)
 			{
 				getchar();
-                printf("\n    >> Input Number Telephone [10-13]: ");
+                printf("\n%s>> Input Number Telephone [10-13]: ", spc);
                 scanf("%[^\n]", temp);
                 l = strlen(temp);
                 if( l < 10 || l > 13 )
 				{
-                    printf("      --- No Telephone Must Between 11 and 13 Num Characters ---\n");
+                    printf("%s  --- No Telephone Must Between 11 and 13 Num Characters ---\n", spc);
                 }
 				else
 				{
@@ -283,7 +296,7 @@ const char* string_validation(int method)
 					if(no_check == 1) //kl stringnya semua terdiri dari angka
 						break;
 					else
-						printf("      --- No Telephone Must include Numbers Only ---\n");
+						printf("%s  --- No Telephone Must include Numbers Only ---\n", spc);
 				}
 			}
 			break;
@@ -293,11 +306,11 @@ const char* string_validation(int method)
 			while(1)
 			{
 				getchar();
-				printf("\n    >> Input address [7-25]: ");
+				printf("\n%s>> Input address [7-25]: ", spc);
                 scanf("%[^\n]", temp);
                 l = strlen(temp);
                 if( l < 7 || l > 25 )
-		            printf("      --- Must Between 7 and 25 characters ---\n");
+		            printf("%s  --- Must Between 7 and 25 characters ---\n", spc);
 				else
 					break;
 			}
@@ -364,33 +377,35 @@ int main(){
 			if(flag) 
 			{
 				//validasi nama
-				strcpy(nama, string_validation(1));
+				strcpy(nama, string_validation(1, 1));
 
 				//validasi berat
-				berat = num_validation(1);
+				berat = num_validation(1, 1);
 				
 				//hitung harga
 				harga = berat*prc;
 				
 				//validasi nomor telepon
-				strcpy(no, string_validation(2));
+				strcpy(no, string_validation(2, 1));
 				
 				//validasi metode pick up
-				choice = num_validation(2);
+				choice = num_validation(2, 2);
 				
 				if(choice == 1)
 				{
-					printf("\n\n    Total price : %d\n", harga);
-                   	printf("\n    --- Laundry will be self picked up ---\n");
+					printf("\n\n    ------------------------------------------------------------");
+					printf("\n\n      Total price : %d\n", harga);
+                   	printf("\n      Laundry will be self picked up ---\n");
 				   	strcpy(alamat, "   ( Self Pick Up )      ");
                 }
 				else if(choice == 2)
 				{
 					//validasi alamat
-					strcpy(alamat, string_validation(3));
-//							
-					printf("\n\n    Total price : %d\n", harga);
-					printf("\n    --- Laundry will be delivered to %s ---\n", alamat);
+					strcpy(alamat, string_validation(3, 2));
+					
+					printf("\n\n    ------------------------------------------------------------");		
+					printf("\n\n      Total price : %d\n", harga);
+					printf("\n      Laundry will be delivered to %s\n", alamat);
                 }
                 
                 root = insert(root, id, nama, berat, harga, no, alamat, 0);
@@ -399,134 +414,146 @@ int main(){
 	    }
 		else if (option==3)
 		{
-			while(1){
+			n *temp; 
+			while(1)
+			{
 				getchar();
 				printf("\n   >> Input Order ID L[1-9][0-9]: ");
 				scanf("%c%d", &x, &id);
 				
-				n*temp = search(root,id);
+				temp = search(root,id);
 				
 				if(x!='L' || (id<10 || id>99))
 	                printf("      --- ID doesn't exist ---\n");
-	            else if(temp!=NULL)
+	            else if (temp != NULL)
+	            	break;
+	            else
 				{
-					int pilih, yesno;
-//					printf("\n\t<L%2d> %-14s %2d KG   %-13s   %-23s\n",temp->ID,temp->name,temp->heavy, temp->number, temp->address);
-					
-					printf("\n    Data With ID L%2d Is Found.\n\n", temp->ID);
-					printf("      Customer ID    : %d\n", temp->ID);
-				    printf("      Customer Name  : %s\n", temp->name);
-				    printf("      Contact number : %s\n", temp->number);
-				    printf("      Laundry weight : %d\n", temp->heavy);
-				    printf("      Address        : ");
-				    if(strcmp(temp->address, "   ( Self Pick Up )      ") == 0)
-				    	printf("[ Self Pick Up ]\n\n");
-				    else
-				    	printf("%s\n\n", temp->address);
-				    
-				    printf("    You want to Cancel or Delete it?\n");
-				    printf("      [1] Update\n");
-					printf("      [2] Cancel\n");
-				    pilih = num_validation(3);
-				    
-				    switch(pilih)
-				    {
-				    	case 1:
-				    	{
-				    		int up_choice;
-				    		printf("\n       What do you want to update?\n");
-				    		printf("         [1] Berat\n");
-							printf("         [2] Nama\n");
-							printf("         [3] No\n");
-							printf("         [4] Alamat\n");
-							printf("         [5] Delivery Way\n");
-							printf("         [6] All (except ID)\n\n");
-				    		while(1)
-							{
-							    printf("\n          >> Input your choice: ");
-					            scanf("%d", &up_choice);
-					            
-					            if(up_choice < 1 || up_choice > 6)
-					            	printf("           --- Input not valid ---\n");
-					            else
-									break;
-							}
-							
-							switch(up_choice)
-							{
-								case 1:
-								{
-									temp->heavy = num_validation(1);
-									temp->price = temp->heavy*prc;
-									break;
-								}
-								case 2:
-								{
-									strcpy(temp->name, string_validation(1));
-									break;
-								}	
-								case 3:
-								{
-									strcpy(temp->number, string_validation(2));
-									break;
-								}
-								case 4:
-								{
-									strcpy(temp->address, string_validation(3));
-									break;
-								}
-								case 5:
-								{
-									int ch = num_validation(2);
-				
-									if(ch == 1)
-									   	strcpy(temp->address, "   ( Self Pick Up )      ");
-									else if(ch == 2)
-										strcpy(temp->address, string_validation(3));
-									break;
-								}
-								case 6:
-								{
-									temp->heavy = num_validation(1);
-									strcpy(temp->name, string_validation(1));
-									strcpy(temp->number, string_validation(2));
-									
-									int ch = num_validation(2);
-				
-									if(ch == 1)
-									   	strcpy(temp->address, "   ( Self Pick Up )      ");
-									else if(ch == 2)
-										strcpy(temp->address, string_validation(3));
-									break;
-								}	
-							}
-							
-							break;
-						}
-						case 2:
-						{
-							printf("    You Want to Cancel It?\n");
-							printf("      [1] Yes\n");
-							printf("      [2] No\n\n");
-							printf("    >> ");
-							scanf("%d",&pilih);
-							if(pilih==1)
-							{
-			//					printf("\n\tData With ID L%2d Is Deleted\n",temp->ID);
-								printf("\n\tOrder With ID L%2d Is Canceled\n",temp->ID);
-								root = delete(root,id);
-							}
-							
-							break;
-						}
-					}
-					
-				}
-				else{
 					printf("\n      --- ID Is Not Found ---\n");
 					break;
+				}   
+	    	}
+	    	
+            if(temp!=NULL)
+			{
+				int pilih, yesno;
+//					printf("\n\t<L%2d> %-14s %2d KG   %-13s   %-23s\n",temp->ID,temp->name,temp->heavy, temp->number, temp->address);
+				
+				printf("\n      Data With ID L%2d Is Found.\n\n", temp->ID);
+				printf("        Customer ID    : %d\n", temp->ID);
+			    printf("        Customer Name  : %s\n", temp->name);
+			    printf("        Contact number : %s\n", temp->number);
+			    printf("        Laundry weight : %d\n", temp->heavy);
+			    printf("        Address        : ");
+			    
+			    if(strcmp(temp->address, "   ( Self Pick Up )      ") == 0)
+			    	printf("[ Self Pick Up ]\n\n");
+			    else
+			    	printf("%s\n\n", temp->address);
+			    
+			    printf("      You want to Update or Cancel it?\n");
+			    printf("        [1] Update\n");
+				printf("        [2] Cancel\n");
+				
+			    pilih = num_validation(3, 2);
+			    
+			    switch(pilih)
+			    {
+			    	int up_choice;
+			    	
+			    	case 1:
+			    	{		
+			    		printf("\n      What do you want to update?\n");
+			    		printf("        [1] Berat\n");
+						printf("        [2] Nama\n");
+						printf("        [3] No\n");
+						printf("        [4] Alamat\n");
+						printf("        [5] Delivery Way\n");
+						printf("        [6] All (except ID)\n\n");
+						
+			    		while(1)
+						{
+						    printf("\n      >> Input your choice: ");
+				            scanf("%d", &up_choice);
+				            
+				            if(up_choice < 1 || up_choice > 6)
+				            	printf("        --- Input not valid ---\n");
+				            else
+								break;
+						}
+						
+						switch(up_choice)
+						{
+							case 1:
+							{
+								temp->heavy = num_validation(1, 2);
+								temp->price = temp->heavy*prc;
+								break;
+							}
+							case 2:
+							{
+								strcpy(temp->name, string_validation(1, 2));
+								break;
+							}	
+							case 3:
+							{
+								strcpy(temp->number, string_validation(2, 2));
+								break;
+							}
+							case 4:
+							{
+								strcpy(temp->address, string_validation(3, 2));
+								break;
+							}
+							case 5:
+							{
+								int ch = num_validation(2, 2);
+			
+								if(ch == 1)
+								   	strcpy(temp->address, "   ( Self Pick Up )      ");
+								else if(ch == 2)
+									strcpy(temp->address, string_validation(3, 2));
+								break;
+							}
+							case 6:
+							{
+								temp->heavy = num_validation(1, 2);
+								strcpy(temp->name, string_validation(1, 2));
+								strcpy(temp->number, string_validation(2, 2));
+								
+								int ch = num_validation(2, 2);
+			
+								if(ch == 1)
+								   	strcpy(temp->address, "   ( Self Pick Up )      ");
+								else if(ch == 2)
+									strcpy(temp->address, string_validation(3, 2));
+								break;
+							}	
+						}
+						break;
+					}
+					case 2:
+					{
+						printf("\n      You Want to Cancel It?\n");
+						printf("        [1] Yes\n");
+						printf("        [2] No\n");
+						
+						up_choice = num_validation(3, 2);
+						
+						if(up_choice == 1)
+						{
+		//					printf("\n\tData With ID L%2d Is Deleted\n",temp->ID);
+							printf("\n    --- Order With ID L%2d Is Canceled ---\n",temp->ID);
+							root = delete(root,id);
+						}
+						
+						break;
+					}
 				}
+				
+			
 			}
+		
 	    }
 	    
 		else if (option==4)
@@ -546,8 +573,8 @@ int main(){
 		    	else if(temp!=NULL)
 				{
 //              		printf("\n    L%2d - %-14s  %2d Kg %-13s %-23s \n\tHas Been Sucessfully Taken\n", temp->ID, temp->name, temp->heavy, temp->number, temp->address);
-              		printf("\n    Order with :");
-				    printf("\n      Customer ID    : %d\n", temp->ID);
+              		printf("\n    Order with\n\n");
+				    printf("      Customer ID    : %d\n", temp->ID);
 				    printf("      Customer Name  : %s\n", temp->name);
 				    printf("      Contact number : %s\n", temp->number);
 				    printf("      Laundry weight : %d\n", temp->heavy);
@@ -557,7 +584,7 @@ int main(){
 				    else
 				    	printf("%s\n\n", temp->address);
 				    	
-				    printf("\nHas Been Sucessfully Taken\n");	
+				    printf("\n    Has Been Sucessfully Taken\n");	
 					root = delete(root,id);
 				    break;
 		    	}
