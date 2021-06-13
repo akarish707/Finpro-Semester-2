@@ -151,6 +151,17 @@ void inorder(n*root)
     inorder(root->right);
 }
 
+void postOrder(n*root) {
+  if(root) {
+    postOrder(root->left);
+    postOrder(root->right);
+    printf("    |     |           |                              |                  |                              |           |             |\n" );	
+	printf("    | %2d. |   L%4d   |   %-25s  |   %-13s  |    %-25s |   %2d Kg   |  Rp %6d  |\n", print_no, root->ID, root->name, root->number, root->address, root->heavy, root->price);
+	print_no++;
+	
+  }
+}
+
 int id_validation(n *root, int *flag)
 {
 	int l, id;
@@ -340,7 +351,7 @@ int main(){
 	    printf("   [2] Add New Laundry List\n");
 	    printf("   [3] Cancel Laundry\n");
 	    printf("   [4] Take Laundry\n");
-	    printf("   [5] Sort Laundry List\n");
+	    printf("   [5] InOrder, PreOrder, PostOrder\n");
 	    printf("   [6] Exit Program\n");
 	    printf("\n >> Input Your Choice: "); scanf("%d", &option);
 	    
@@ -593,24 +604,46 @@ int main(){
 		else if (option==5)
 		{
 			print_no = 1; //set var global to 1
-	        printf("\n                                                   --- Laundry List ---\n");
-			printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
-		 	printf("    | No. |    ID     |        Customer Name         |   Phone Number   |            Address           |   Heavy   |    Harga    |\n");
-			printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
-
+	        
 			if(root == NULL)
 			{
+				printf("\n                                                   --- Laundry List ---\n");
+				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
+		 		printf("    | No. |    ID     |        Customer Name         |   Phone Number   |            Address           |   Heavy   |    Harga    |\n");
+				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
 				printf("    |                                                                                                                            |\n" );	
 				printf("    |                                                      No Data Available                                                     |\n");
 				printf("    |                                                                                                                            |\n" );	
-
+				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );
 			}
 			else
 			{
+				printf("\nInOrder List View : \n");
+				printf("\n                                                   --- Laundry List ---\n");
+				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
+		 		printf("    | No. |    ID     |        Customer Name         |   Phone Number   |            Address           |   Heavy   |    Harga    |\n");
+				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
 				inorder(root);
-				printf("    |     |           |                              |                  |                              |           |             |\n" );	
+				printf("    |     |           |                              |                  |                              |           |             |\n" );
+				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );
+				printf("\n\nPreOrder List View : \n");
+				printf("\n                                                   --- Laundry List ---\n");
+				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
+		 		printf("    | No. |    ID     |        Customer Name         |   Phone Number   |            Address           |   Heavy   |    Harga    |\n");
+				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
+				showlist(root);
+				printf("    |     |           |                              |                  |                              |           |             |\n" );
+				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );
+				printf("\n\nPostOrder List View : \n");
+				printf("\n                                                   --- Laundry List ---\n");
+				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
+		 		printf("    | No. |    ID     |        Customer Name         |   Phone Number   |            Address           |   Heavy   |    Harga    |\n");
+				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
+				postOrder(root);
+				printf("    |     |           |                              |                  |                              |           |             |\n" );
+				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
 			}
-			printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
+				
 	    }
 	    else if (option==6){
 	        
@@ -630,14 +663,12 @@ int main(){
 
 
 /*
-
 2
 L30
 Celine
 2
 0812222210
 1
-
 2
 L20
 cheryl
@@ -645,21 +676,18 @@ cheryl
 08122222911
 2
 Jl. ya disana itu
-
 2
 L15
 Kunti
 2
 08122222913
 1
-
 2
 L10
 askadi
 2
 081225222112
 1
-
 2
 L26
 dime
@@ -667,28 +695,24 @@ dime
 08122222911
 2
 Jl. depan warunk
-
 2
 L60
 mega
 2
 08122222913
 1
-
 2
 L12
 bapak sudirman
 2
 08122222913
 1
-
 2
 L44
 mbok je
 2
 081225298712
 1
-
 2
 L23
 kang nggojek
@@ -696,13 +720,11 @@ kang nggojek
 08122558911
 2
 Jl. depan mekdi
-
 2
 L98
 megah kalik saya
 2
 08129962913
 1
-
 */
 
