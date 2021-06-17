@@ -110,7 +110,6 @@ void postorder(n*root) {
   }
 }
 
-
 n* find_minimum(n*root)
 {
     if(root == NULL)
@@ -161,7 +160,6 @@ n* delete(n *root, int id)
     }
     return root;
 }
-
 
 int id_validation(n *root, int *flag)
 {
@@ -423,7 +421,8 @@ int main(){
 			int flag = 1;
 			id = id_validation(root, &flag);
 			
-			int l;
+			int l; 
+			char fp_alamat[25];
 			//klo ID blm pernah diinput
 			if(flag) 
 			{
@@ -448,19 +447,23 @@ int main(){
 					printf("\n\n      Total price : %d\n", harga);
                    	printf("\n      Laundry will be self picked up\n");
 				   	strcpy(alamat, "   ( Self Pick Up )      ");
+//				   	strcpy(fp_alamat,"selfpickup");
                 }
 				else if(choice == 2)
 				{
 					//validasi alamat
 					strcpy(alamat, string_validation(3, 2));
-					
+//					strcpy(fp_alamat, alamat);
 					printf("\n    ------------------------------------------------------------");		
 					printf("\n\n      Total price : %d\n", harga);
 					printf("\n      Laundry will be delivered to %s\n", alamat);
                 }
                 
                 root = insert(root, id, nama, berat, harga, no, alamat, 0);
-
+				
+//				FILE *fp = fopen("laundries.txt","w+");
+//				fprintf(fp,"\n%s#%s#%d#%d#%s#%s",id, nama, berat, harga, no, fp_alamat);
+//				fclose(fp);
 			}
 	    }
 		else if (option==3)
@@ -640,7 +643,28 @@ int main(){
 			}
 	    }
 	    else if (option==5){
-	        
+	    	FILE *fp = fopen("laundries.txt","a+");
+			
+			
+	        void print(n*root)
+			{
+			    if(root == NULL)
+			        return;
+			
+			    //traverse the left subtree
+			    print(root->left);
+
+
+			    //visit the root blm ada alamattt
+			    fprintf(fp,"L%d#%s#%d#%d#%s#\n",root->ID, root->name, root->heavy, root->price, root->number);
+
+				
+			    //traverse the right subtree
+			    print(root->right);
+			}
+			print(root);
+			fclose(fp);
+			exit(1);
 	    }
 	    else
 	   		printf("\n    Sorry, your input invalid.\n");
@@ -650,13 +674,15 @@ int main(){
         system("CLEAR || CLS");
   }
   
-  printf("\n Thank You For Using The Application ^_^\n");
+  	printf("\n Thank You For Using The Application ^_^\n");
+  	return 0;
   
 }
 
 
 
 /*
+
 2
 L30
 Celine
@@ -727,4 +753,5 @@ megah kalik saya
 2
 08129962913
 1
+
 */
