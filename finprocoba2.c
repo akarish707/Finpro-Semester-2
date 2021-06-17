@@ -65,7 +65,25 @@ n *insert(n*root, int id, char nama[], int berat, int harga, char no[], char ala
   return root;
 }
 
-void showlist(n *root)
+void inorder(n*root)
+{
+    if(root == NULL)
+        return;
+
+    //traverse the left subtree
+    inorder(root->left);
+
+    //visit the root
+	printf("    |     |           |                              |                  |                              |           |             |\n" );	
+	printf("    | %2d. |   L%4d   |   %-25s  |   %-13s  |    %-25s |   %2d Kg   |  Rp %6d  |\n", print_no, root->ID, root->name, root->number, root->address, root->heavy, root->price);
+
+	print_no++;
+	
+    //traverse the right subtree
+    inorder(root->right);
+}
+
+void preorder(n *root)
 {
 	n *temp = root;
 	
@@ -77,8 +95,19 @@ void showlist(n *root)
 
 	print_no++;
 	
-	showlist(root->left);
-	showlist(root->right);
+	preorder(root->left);
+	preorder(root->right);
+}
+
+void postorder(n*root) {
+  if(root) {
+    postorder(root->left);
+    postorder(root->right);
+    printf("    |     |           |                              |                  |                              |           |             |\n" );	
+	printf("    | %2d. |   L%4d   |   %-25s  |   %-13s  |    %-25s |   %2d Kg   |  Rp %6d  |\n", print_no, root->ID, root->name, root->number, root->address, root->heavy, root->price);
+	print_no++;
+	
+  }
 }
 
 
@@ -133,34 +162,6 @@ n* delete(n *root, int id)
     return root;
 }
 
-void inorder(n*root)
-{
-    if(root == NULL)
-        return;
-
-    //traverse the left subtree
-    inorder(root->left);
-
-    //visit the root
-	printf("    |     |           |                              |                  |                              |           |             |\n" );	
-	printf("    | %2d. |   L%4d   |   %-25s  |   %-13s  |    %-25s |   %2d Kg   |  Rp %6d  |\n", print_no, root->ID, root->name, root->number, root->address, root->heavy, root->price);
-
-	print_no++;
-	
-    //traverse the right subtree
-    inorder(root->right);
-}
-
-void postOrder(n*root) {
-  if(root) {
-    postOrder(root->left);
-    postOrder(root->right);
-    printf("    |     |           |                              |                  |                              |           |             |\n" );	
-	printf("    | %2d. |   L%4d   |   %-25s  |   %-13s  |    %-25s |   %2d Kg   |  Rp %6d  |\n", print_no, root->ID, root->name, root->number, root->address, root->heavy, root->price);
-	print_no++;
-	
-  }
-}
 
 int id_validation(n *root, int *flag)
 {
@@ -349,16 +350,44 @@ int main(){
 	    printf(" Oo=======================oO\n");
 	    printf("   [1] View Laundry List\n");
 	    printf("   [2] Add New Laundry List\n");
-	    printf("   [3] Cancel Laundry\n");
+	    printf("   [3] Cancel/Update Laundry\n");
 	    printf("   [4] Take Laundry\n");
-	    printf("   [5] InOrder, PreOrder, PostOrder\n");
-	    printf("   [6] Exit Program\n");
+	    printf("   [5] Exit Program\n");
 	    printf("\n >> Input Your Choice: "); scanf("%d", &option);
 	    
 	    
 	    if(option==1)
 		{
 			print_no = 1; //set var global to 1
+			printf("      Choose the order Method: \n");
+		    printf("        [1] Inorder\n");
+			printf("        [2] Preorder\n");
+			printf("        [3] Postorder\n");
+
+			while(1)
+			{
+			    printf("\n      >> Input your choice: ");
+	            scanf("%d", &choice);
+	            
+	            if(choice < 1 || choice > 3)
+	            	printf("        --- Input not valid ---\n");
+	            else
+					break;
+			}
+			
+			switch(choice)
+			{
+				case 1:
+					printf("List data by indorder method\n");
+					break;
+				case 2:
+					printf("List data by preorder method\n");
+					break;
+				case 3:
+					printf("List data by postorder method\n");;
+					break;
+			}
+				
 			printf("\n                                                   --- Laundry List ---\n");
 			printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
 		 	printf("    | No. |    ID     |        Customer Name         |   Phone Number   |            Address           |   Heavy   |    Harga    |\n");
@@ -373,7 +402,18 @@ int main(){
 			}
 			else
 			{
-				showlist(root);
+				switch(choice)
+				{
+					case 1:
+						inorder(root);
+						break;
+					case 2:
+						preorder(root);
+						break;
+					case 3:
+						postorder(root);
+						break;
+				}
 				printf("    |     |           |                              |                  |                              |           |             |\n" );	
 			}
 			printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
@@ -404,7 +444,7 @@ int main(){
 				
 				if(choice == 1)
 				{
-					printf("\n\n    ------------------------------------------------------------");
+					printf("\n    ------------------------------------------------------------");
 					printf("\n\n      Total price : %d\n", harga);
                    	printf("\n      Laundry will be self picked up\n");
 				   	strcpy(alamat, "   ( Self Pick Up )      ");
@@ -414,7 +454,7 @@ int main(){
 					//validasi alamat
 					strcpy(alamat, string_validation(3, 2));
 					
-					printf("\n\n    ------------------------------------------------------------");		
+					printf("\n    ------------------------------------------------------------");		
 					printf("\n\n      Total price : %d\n", harga);
 					printf("\n      Laundry will be delivered to %s\n", alamat);
                 }
@@ -447,8 +487,7 @@ int main(){
 	    	
             if(temp!=NULL)
 			{
-				int pilih, yesno;
-//					printf("\n\t<L%2d> %-14s %2d KG   %-13s   %-23s\n",temp->ID,temp->name,temp->heavy, temp->number, temp->address);
+				int subchoice;
 				
 				printf("\n      Data With ID L%2d Is Found.\n\n", temp->ID);
 				printf("        Customer ID    : %d\n", temp->ID);
@@ -466,11 +505,10 @@ int main(){
 			    printf("        [1] Update\n");
 				printf("        [2] Cancel\n");
 				
-			    pilih = num_validation(3, 2);
+			    choice = num_validation(3, 2);
 			    
-			    switch(pilih)
+			    switch(choice)
 			    {
-			    	int up_choice;
 			    	
 			    	case 1:
 			    	{		
@@ -485,15 +523,15 @@ int main(){
 			    		while(1)
 						{
 						    printf("\n      >> Input your choice: ");
-				            scanf("%d", &up_choice);
+				            scanf("%d", &subchoice);
 				            
-				            if(up_choice < 1 || up_choice > 6)
+				            if(subchoice < 1 || subchoice > 6)
 				            	printf("        --- Input not valid ---\n");
 				            else
 								break;
 						}
 						
-						switch(up_choice)
+						switch(subchoice)
 						{
 							case 1:
 							{
@@ -549,9 +587,9 @@ int main(){
 						printf("        [1] Yes\n");
 						printf("        [2] No\n");
 						
-						up_choice = num_validation(3, 2);
+						subchoice = num_validation(3, 2);
 						
-						if(up_choice == 1)
+						if(subchoice == 1)
 						{
 		//					printf("\n\tData With ID L%2d Is Deleted\n",temp->ID);
 							printf("\n    --- Order With ID L%2d Is Canceled ---\n",temp->ID);
@@ -601,51 +639,7 @@ int main(){
 		    	}
 			}
 	    }
-		else if (option==5)
-		{
-			print_no = 1; //set var global to 1
-	        
-			if(root == NULL)
-			{
-				printf("\n                                                   --- Laundry List ---\n");
-				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
-		 		printf("    | No. |    ID     |        Customer Name         |   Phone Number   |            Address           |   Heavy   |    Harga    |\n");
-				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
-				printf("    |                                                                                                                            |\n" );	
-				printf("    |                                                      No Data Available                                                     |\n");
-				printf("    |                                                                                                                            |\n" );	
-				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );
-			}
-			else
-			{
-				printf("\nInOrder List View : \n");
-				printf("\n                                                   --- Laundry List ---\n");
-				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
-		 		printf("    | No. |    ID     |        Customer Name         |   Phone Number   |            Address           |   Heavy   |    Harga    |\n");
-				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
-				inorder(root);
-				printf("    |     |           |                              |                  |                              |           |             |\n" );
-				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );
-				printf("\n\nPreOrder List View : \n");
-				printf("\n                                                   --- Laundry List ---\n");
-				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
-		 		printf("    | No. |    ID     |        Customer Name         |   Phone Number   |            Address           |   Heavy   |    Harga    |\n");
-				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
-				showlist(root);
-				printf("    |     |           |                              |                  |                              |           |             |\n" );
-				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );
-				printf("\n\nPostOrder List View : \n");
-				printf("\n                                                   --- Laundry List ---\n");
-				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
-		 		printf("    | No. |    ID     |        Customer Name         |   Phone Number   |            Address           |   Heavy   |    Harga    |\n");
-				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
-				postOrder(root);
-				printf("    |     |           |                              |                  |                              |           |             |\n" );
-				printf("    +-----+-----------+------------------------------+------------------+------------------------------+-----------+-------------+\n" );	
-			}
-				
-	    }
-	    else if (option==6){
+	    else if (option==5){
 	        
 	    }
 	    else
@@ -669,6 +663,7 @@ Celine
 2
 0812222210
 1
+
 2
 L20
 cheryl
@@ -676,18 +671,21 @@ cheryl
 08122222911
 2
 Jl. ya disana itu
+
 2
 L15
 Kunti
 2
 08122222913
 1
+
 2
 L10
 askadi
 2
 081225222112
 1
+
 2
 L26
 dime
@@ -701,6 +699,7 @@ mega
 2
 08122222913
 1
+
 2
 L12
 bapak sudirman
@@ -713,6 +712,7 @@ mbok je
 2
 081225298712
 1
+
 2
 L23
 kang nggojek
@@ -720,6 +720,7 @@ kang nggojek
 08122558911
 2
 Jl. depan mekdi
+
 2
 L98
 megah kalik saya
@@ -727,4 +728,3 @@ megah kalik saya
 08129962913
 1
 */
-
