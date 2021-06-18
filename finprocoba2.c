@@ -2,6 +2,7 @@
 #include <malloc.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 #define prc 15000
 
 typedef struct Node{
@@ -75,7 +76,11 @@ void inorder(n*root)
 
     //visit the root
 	printf("    |     |           |                              |                  |                              |           |             |\n" );	
-	printf("    | %2d. |   L%4d   |   %-25s  |   %-13s  |    %-25s |   %2d Kg   |  Rp %6d  |\n", print_no, root->ID, root->name, root->number, root->address, root->heavy, root->price);
+	
+	if(strcmp(root->address, "selfpickup") == 0)
+			printf("    | %2d. |   L%4d   |   %-25s  |   %-13s  |       ( Self Pick Up )       |   %2d Kg   |  Rp %6d  |\n", print_no, root->ID, root->name, root->number, root->heavy, root->price);
+	else
+		printf("    | %2d. |   L%4d   |   %-25s  |   %-13s  |    %-25s |   %2d Kg   |  Rp %6d  |\n", print_no, root->ID, root->name, root->number, root->address, root->heavy, root->price);
 
 	print_no++;
 	
@@ -91,7 +96,11 @@ void preorder(n *root)
 		return;
 
 	printf("    |     |           |                              |                  |                              |           |             |\n" );	
-	printf("    | %2d. |   L%4d   |   %-25s  |   %-13s  |    %-25s |   %2d Kg   |  Rp %6d  |\n", print_no, temp->ID, temp->name, temp->number, temp->address, temp->heavy, temp->price);
+	
+	if(strcmp(root->address, "selfpickup") == 0)
+			printf("    | %2d. |   L%4d   |   %-25s  |   %-13s  |       ( Self Pick Up )       |   %2d Kg   |  Rp %6d  |\n", print_no, root->ID, root->name, root->number, root->heavy, root->price);
+	else
+		printf("    | %2d. |   L%4d   |   %-25s  |   %-13s  |    %-25s |   %2d Kg   |  Rp %6d  |\n", print_no, root->ID, root->name, root->number, root->address, root->heavy, root->price);
 
 	print_no++;
 	
@@ -104,7 +113,12 @@ void postorder(n*root) {
     postorder(root->left);
     postorder(root->right);
     printf("    |     |           |                              |                  |                              |           |             |\n" );	
-	printf("    | %2d. |   L%4d   |   %-25s  |   %-13s  |    %-25s |   %2d Kg   |  Rp %6d  |\n", print_no, root->ID, root->name, root->number, root->address, root->heavy, root->price);
+	
+	if(strcmp(root->address, "selfpickup") == 0)
+			printf("    | %2d. |   L%4d   |   %-25s  |   %-13s  |       ( Self Pick Up )       |   %2d Kg   |  Rp %6d  |\n", print_no, root->ID, root->name, root->number, root->heavy, root->price);
+	else
+		printf("    | %2d. |   L%4d   |   %-25s  |   %-13s  |    %-25s |   %2d Kg   |  Rp %6d  |\n", print_no, root->ID, root->name, root->number, root->address, root->heavy, root->price);
+	
 	print_no++;
 	
   }
@@ -446,14 +460,13 @@ int main(){
 					printf("\n    ------------------------------------------------------------");
 					printf("\n\n      Total price : %d\n", harga);
                    	printf("\n      Laundry will be self picked up\n");
-				   	strcpy(alamat, "   ( Self Pick Up )      ");
-//				   	strcpy(fp_alamat,"selfpickup");
+				   	strcpy(alamat, "selfpickup");
+//				   	strcpy(temp->address, "   ( Self Pick Up )      ");
                 }
 				else if(choice == 2)
 				{
 					//validasi alamat
 					strcpy(alamat, string_validation(3, 2));
-//					strcpy(fp_alamat, alamat);
 					printf("\n    ------------------------------------------------------------");		
 					printf("\n\n      Total price : %d\n", harga);
 					printf("\n      Laundry will be delivered to %s\n", alamat);
@@ -461,9 +474,10 @@ int main(){
                 
                 root = insert(root, id, nama, berat, harga, no, alamat, 0);
 				
-//				FILE *fp = fopen("laundries.txt","w+");
-//				fprintf(fp,"\n%s#%s#%d#%d#%s#%s",id, nama, berat, harga, no, fp_alamat);
-//				fclose(fp);
+				// file processing
+				FILE *fp = fopen("dailydata.txt","a+");
+					fprintf(fp,"L%d#%s#%d#%d#%s#%s\n",id, nama, berat, harga, no, alamat);
+				fclose(fp);
 			}
 	    }
 		else if (option==3)
@@ -490,6 +504,7 @@ int main(){
 	    	
             if(temp!=NULL)
 			{
+						
 				int subchoice;
 				
 				printf("\n      Data With ID L%2d Is Found.\n\n", temp->ID);
@@ -499,7 +514,7 @@ int main(){
 			    printf("        Laundry weight : %d\n", temp->heavy);
 			    printf("        Address        : ");
 			    
-			    if(strcmp(temp->address, "   ( Self Pick Up )      ") == 0)
+			    if(strcmp(temp->address, "selfpickup") == 0)
 			    	printf("[ Self Pick Up ]\n\n");
 			    else
 			    	printf("%s\n\n", temp->address);
@@ -562,7 +577,7 @@ int main(){
 								int ch = num_validation(2, 2);
 			
 								if(ch == 1)
-								   	strcpy(temp->address, "   ( Self Pick Up )      ");
+								   	strcpy(temp->address, "selfpickup");
 								else if(ch == 2)
 									strcpy(temp->address, string_validation(3, 2));
 								break;
@@ -576,12 +591,36 @@ int main(){
 								int ch = num_validation(2, 2);
 			
 								if(ch == 1)
-								   	strcpy(temp->address, "   ( Self Pick Up )      ");
+									strcpy(temp->address, "selfpickup");
 								else if(ch == 2)
 									strcpy(temp->address, string_validation(3, 2));
 								break;
-							}	
+							}
 						}
+						
+						FILE *fp = fopen("dailydata.txt", "r+");
+						FILE *fpt = fopen("tempdata.txt", "w+");
+						
+						//var to read the file processing
+						int fp_id, fp_berat, fp_harga;
+						char fp_nama[25], fp_no[13], fp_alamat[25];
+				
+						while(fscanf(fp, "L%d#%[^#]#%d#%d#%[^#]#%[^\n]\n", &fp_id, &fp_nama, &fp_berat, &fp_harga, &fp_no, &fp_alamat) != EOF)
+						{	
+//							printf("L%d#%s#%d#%d#%s#%s\n", fp_id, fp_nama, fp_berat, fp_harga, fp_no, fp_alamat); 
+
+							if(fp_id == id)
+									fprintf(fpt, "L%d#%s#%d#%d#%s#%s\n", id, temp->name, temp->heavy, temp->price, temp->number, temp->address); 
+								else
+									fprintf(fpt, "L%d#%s#%d#%d#%s#%s\n", fp_id, fp_nama, fp_berat, fp_harga, fp_no, fp_alamat); 
+						}
+						
+						fclose(fp);
+						fclose(fpt);
+						
+						remove("dailydata.txt"); //fp
+						rename("tempdata.txt","dailydata.txt");
+						
 						break;
 					}
 					case 2:
@@ -596,16 +635,40 @@ int main(){
 						{
 		//					printf("\n\tData With ID L%2d Is Deleted\n",temp->ID);
 							printf("\n    --- Order With ID L%2d Is Canceled ---\n",temp->ID);
-							root = delete(root,id);
+							root = delete(root, id);
+							
+							
+							//file processing
+							FILE *fp = fopen("dailydata.txt", "r+");
+							FILE *fpt = fopen("tempdata.txt", "w+");
+							
+							//var to read the file processing
+							int fp_id, fp_berat, fp_harga;
+							char fp_nama[25], fp_no[13], fp_alamat[25];
+							
+							while(fscanf(fp, "L%d#%[^#]#%d#%d#%[^#]#%[^\n]\n", &fp_id, &fp_nama, &fp_berat, &fp_harga, &fp_no, &fp_alamat) != EOF)
+							{
+//								printf("%d: L%d %s %d %d %s %s\n", id, fp_id, fp_nama, fp_berat, fp_harga, fp_no, fp_alamat); 
+		
+								if(fp_id == id)
+									continue;
+									else
+										fprintf(fpt, "L%d#%s#%d#%d#%s#%s\n", fp_id, fp_nama, fp_berat, fp_harga, fp_no, fp_alamat); 
+							}
+							
+							fclose(fp);
+							fclose(fpt);
+							
+							remove("dailydata.txt"); //fp
+							rename("tempdata.txt","dailydata.txt");
 						}
-						
-						break;
 					}
 				}
+
+				
 				
 			
 			}
-		
 	    }
 	    
 		else if (option==4)
@@ -643,27 +706,29 @@ int main(){
 			}
 	    }
 	    else if (option==5){
-	    	FILE *fp = fopen("laundries.txt","a+");
+	    	
+	    	FILE *fp = fopen("dailydata.txt", "r+");
+			FILE *fpt = fopen("laundries.txt", "a+");
 			
-			
-	        void print(n*root)
-			{
-			    if(root == NULL)
-			        return;
-			
-			    //traverse the left subtree
-			    print(root->left);
+			//var to read the file processing
+			int fp_id, fp_berat, fp_harga;
+			char fp_nama[25], fp_no[13], fp_alamat[25];
+	
+			while(fscanf(fp, "L%d#%[^#]#%d#%d#%[^#]#%[^\n]\n", &fp_id, &fp_nama, &fp_berat, &fp_harga, &fp_no, &fp_alamat) != EOF)
+			{	
+				printf("L%d#%s#%d#%d#%s#%s\n", fp_id, fp_nama, fp_berat, fp_harga, fp_no, fp_alamat); 
 
-
-			    //visit the root blm ada alamattt
-			    fprintf(fp,"L%d#%s#%d#%d#%s#\n",root->ID, root->name, root->heavy, root->price, root->number);
-
-				
-			    //traverse the right subtree
-			    print(root->right);
+//				if(fp_id == id)
+//						fprintf(fpt, "L%d#%s#%d#%d#%s#%s\n", id, temp->name, temp->heavy, temp->price, temp->number, temp->address); 
+//					else
+						fprintf(fpt, "L%d#%s#%d#%d#%s#%s\n", fp_id, fp_nama, fp_berat, fp_harga, fp_no, fp_alamat); 
 			}
-			print(root);
+			
 			fclose(fp);
+			fclose(fpt);
+			
+			remove("dailydata.txt"); //fp
+	    	
 			exit(1);
 	    }
 	    else
@@ -678,7 +743,6 @@ int main(){
   	return 0;
   
 }
-
 
 
 /*
