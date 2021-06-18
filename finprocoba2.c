@@ -698,10 +698,13 @@ int main(){
 					if(x!='L' || (id<10 || id>99))
 				        printf("        --- ID doesn't exist ---\n\n");
 			     	else if(temp == NULL)
-			   	      	printf("        --- Member ID is not found ---\n");
-			    	else if(temp!=NULL)
+			     	{
+			     		printf("\n   --- Member ID is not found ---\n");
+			     		break;
+			    	}
+					else if(temp!=NULL)
 					{
-	//              		printf("\n    L%2d - %-14s  %2d Kg %-13s %-23s \n\tHas Been Sucessfully Taken\n", temp->ID, temp->name, temp->heavy, temp->number, temp->address);
+	//              	printf("\n    L%2d - %-14s  %2d Kg %-13s %-23s \n\tHas Been Sucessfully Taken\n", temp->ID, temp->name, temp->heavy, temp->number, temp->address);
 	              		printf("\n    Order with\n\n");
 					    printf("      Customer ID    : %d\n", temp->ID);
 					    printf("      Customer Name  : %s\n", temp->name);
@@ -782,7 +785,7 @@ Jl. ya disana itu
 
 2
 L15
-Kunti
+K. Syarifah
 2
 08122222913
 1
